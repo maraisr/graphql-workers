@@ -10,8 +10,8 @@ node_modules
 /.vscode
 
 # Dist
-/*.js
-/*.mjs
-/*.d.ts
+/index.js
+/index.mjs
+/index.d.ts
 
 /example
