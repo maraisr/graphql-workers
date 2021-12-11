@@ -41,6 +41,7 @@ declare const schema: GraphQLSchema;
 
 export default {
 	async fetch(req, env, ctx) {
+		// ~> create a streamable schema
 		const { reply } = createSchemaResponder(ctx, schema);
 
 		// ~> get the paramaters in way you wish
@@ -52,7 +53,7 @@ export default {
 	}
 }
 
-// Or a module workers convience method
+// or a module workers convience method
 export default makeHandler(schema);
 ```
 
