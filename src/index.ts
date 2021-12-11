@@ -1,13 +1,13 @@
 import flru from "flru";
 import {
 	type DocumentNode,
-	execute,
 	type GraphQLSchema,
+	type ValidationRule,
+	execute,
 	parse,
 	validate,
-	ValidationRule,
 } from "graphql";
-import {stream} from "piecemeal/worker";
+import { stream } from "piecemeal/worker";
 import { send } from "worktop/response";
 
 export interface Options {
