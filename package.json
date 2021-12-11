@@ -1,0 +1,55 @@
+{
+	"name": "graphql-workers",
+	"version": "0.0.0",
+	"license": "MIT",
+	"author": {
+		"name": "Marais Rossouw",
+		"email": "me@marais.dev",
+		"url": "https://marais.io"
+	},
+	"sideEffects": false,
+	"type": "module",
+	"exports": {
+		".": {
+			"import": "./index.mjs",
+			"require": "./index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"main": "./index.js",
+	"module": "./index.mjs",
+	"types": "index.d.ts",
+	"files": [
+		"index.mjs",
+		"index.js",
+		"index.d.ts"
+	],
+	"scripts": {
+		"build": "rollup -c",
+		"test": "node --loader tsm node_modules/uvu/bin.js packages \".spec.m?ts$\"",
+		"typecheck": "tsc --noEmit --skipLibCheck"
+	},
+	"dependencies": {
+		"flru": "^1.0.2",
+		"piecemeal": "^0.0.4",
+		"worktop": "^0.8.0-next.8"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "3.2.0",
+		"@marais/tsconfig": "0.0.1",
+		"@types/node": "16.11.11",
+		"graphql": "16.1.0-experimental-stream-defer.6",
+		"rollup": "2.61.0",
+		"rollup-plugin-dts": "4.0.1",
+		"tsm": "2.2.1",
+		"typescript": "^4.5.3",
+		"uvu": "0.5.2"
+	},
+	"peerDependencies": {
+		"graphql": "*"
+	},
+	"packageManager": "pnpm@6.23.6",
+	"volta": {
+		"node": "17.2.0"
+	}
+}

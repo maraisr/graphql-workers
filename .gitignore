@@ -1,0 +1,17 @@
+node_modules
+.DS_Store
+*-lock.json
+*.lock
+*.log
+
+# Editors
+*.iml
+/.idea
+/.vscode
+
+# Dist
+/*.js
+/*.mjs
+/*.d.ts
+
+/example

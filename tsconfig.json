@@ -1,0 +1,12 @@
+{
+	"extends": "@marais/tsconfig",
+	"compilerOptions": {
+		"target": "esnext",
+		"declaration": false,
+		"removeComments": false,
+		"types": ["@cloudflare/workers-types"],
+		"lib": ["esnext", "dom.iterable", "webworker"]
+	},
+	"include": ["src/*"],
+	"exclude": ["node_modules"]
+}
