@@ -13,7 +13,7 @@ import { send } from "worktop/response";
 export interface Options {
 	context?: unknown;
 	validationRules?: ValidationRule[];
-	cacheQueryParse?: boolean;
+	queryParseCache?: Map<string, DocumentNode> | false;
 	executor?: typeof execute;
 }
 
@@ -22,9 +22,9 @@ let queryCache = flru<DocumentNode>(10);
 export const createSchemaResponder = (ctx: ExecutionContext, schema: GraphQLSchema, options?: Options) => {
 	options = options || {};
 
-	let cache = (options.cacheQueryParse ?? true) ? queryCache : null;
+	let cache = (options.queryParseCache ?? queryCache);
 
-	async function reply(query: DocumentNode | string, variables?: Record<string, any>, operationName?: string) {
+	async function reply(query: DocumentNode | string, variables?: Record<string, any> | null, operationName?: string) {
 		let query_ast: DocumentNode,
 			query_string = typeof query === "string";
 
@@ -69,7 +69,11 @@ export const createSchemaResponder = (ctx: ExecutionContext, schema: GraphQLSche
 export const makeHandler = (schema: GraphQLSchema, options?: Options): ExportedHandler => ({
 	fetch: async (req, _env, ctx) => {
 		try {
-			var body: { query: string, operationName?: string, variables?: Record<string, any> } = await req.json();
+			var body: {
+				query: string,
+				operationName?: string,
+				variables?: Record<string, any> | null
+			} = await req.json();
 		} catch (e) {
 			return send(406, { errors: [{ message: "malformed body" }] });
 		}
