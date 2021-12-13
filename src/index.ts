@@ -1,11 +1,11 @@
 import flru from "flru";
 import {
 	type DocumentNode,
-	type GraphQLSchema,
-	type ValidationRule,
 	execute,
+	type GraphQLSchema,
 	parse,
 	validate,
+	type ValidationRule,
 } from "graphql";
 import { stream } from "piecemeal/worker";
 import { send } from "worktop/response";
@@ -83,8 +83,7 @@ export const makeHandler = (schema: GraphQLSchema, options?: Options): ExportedH
 	},
 });
 
+/*#__INLINE__*/
 const isAsyncGenerator = (input: unknown): input is AsyncGenerator =>
-	typeof input === "object" &&
-	input !== null &&
-	((input as any)[Symbol.toStringTag] === "AsyncGenerator" ||
-		(Symbol.asyncIterator && Symbol.asyncIterator in input));
+	// @ts-ignore
+	input[Symbol.asyncIterator] < "u";
