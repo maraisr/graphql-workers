@@ -8,7 +8,7 @@ import {
 	type ValidationRule,
 } from "graphql";
 import { stream } from "piecemeal/worker";
-import { send } from "worktop/response";
+import { reply } from "worktop/response";
 
 export interface Options {
 	context?: unknown;
@@ -24,7 +24,7 @@ export const createSchemaResponder = (ctx: ExecutionContext, schema: GraphQLSche
 
 	let cache = (options.queryParseCache ?? queryCache);
 
-	async function reply(query: DocumentNode | string, variables?: Record<string, any> | null, operationName?: string) {
+	async function replyFn(query: DocumentNode | string, variables?: Record<string, any> | null, operationName?: string) {
 		let query_ast: DocumentNode,
 			query_string = typeof query === "string";
 
@@ -41,7 +41,7 @@ export const createSchemaResponder = (ctx: ExecutionContext, schema: GraphQLSche
 		const validation_errors = validate(schema, query_ast, options.validationRules, {
 			maxErrors: 1,
 		});
-		if (validation_errors.length) return send(406, { errors: validation_errors });
+		if (validation_errors.length) return reply(406, { errors: validation_errors });
 		if (query_string && cache) cache.set(query as string, query_ast);
 
 		const result = await (options.executor || execute)({
@@ -58,12 +58,12 @@ export const createSchemaResponder = (ctx: ExecutionContext, schema: GraphQLSche
 			return response;
 		}
 
-		return send(200, result, {
+		return reply(200, result, {
 			"content-type": "application/graphql+json",
 		});
 	}
 
-	return { reply };
+	return { reply: replyFn };
 };
 
 export const makeHandler = (schema: GraphQLSchema, options?: Options): ExportedHandler => ({
@@ -75,15 +75,14 @@ export const makeHandler = (schema: GraphQLSchema, options?: Options): ExportedH
 				variables?: Record<string, any> | null
 			} = await req.json();
 		} catch (e) {
-			return send(406, { errors: [{ message: "malformed body" }] });
+			return reply(406, { errors: [{ message: "malformed body" }] });
 		}
 
 		const query = body.query;
-		if (!query) return send(406, { errors: [{ message: "query param required" }] });
+		if (!query) return reply(406, { errors: [{ message: "query param required" }] });
 
-		const { reply } = createSchemaResponder(ctx, schema, options);
-
-		return reply(query, body.variables, body.operationName);
+		return createSchemaResponder(ctx, schema, options)
+			.reply(query, body.variables, body.operationName);
 	},
 });
 

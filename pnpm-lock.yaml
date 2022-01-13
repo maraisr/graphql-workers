@@ -13,11 +13,11 @@ importers:
       rollup: 2.61.0
       rollup-plugin-dts: 4.0.1
       typescript: ^4.5.3
-      worktop: ^0.8.0-next.8
+      worktop: ^0.8.0-next.10
     dependencies:
       flru: 1.0.2
       piecemeal: 0.0.4
-      worktop: 0.8.0-next.8
+      worktop: 0.8.0-next.10
     devDependencies:
       '@cloudflare/workers-types': 3.2.0
       '@marais/tsconfig': 0.0.1
@@ -382,6 +382,14 @@ packages:
     dependencies:
       esbuild: 0.13.15
       mri: 1.2.0
+    dev: false
+
+  /worktop/0.8.0-next.10:
+    resolution: {integrity: sha512-IUq+fTF7bO3DhwubXlkIIqWPIrXgLfHg1XHqDJVaRhVN39KcUqR3sH4PqB8Ogjb23fPEskeTeVfTtItgmJSxOA==}
+    engines: {node: '>=12'}
+    dependencies:
+      mrmime: 1.0.0
+      regexparam: 2.0.0
     dev: false
 
   /worktop/0.8.0-next.8:
