@@ -9,14 +9,14 @@ importers:
       '@types/node': 16.11.11
       flru: ^1.0.2
       graphql: 16.1.0-experimental-stream-defer.6
-      piecemeal: ^0.0.4
+      piecemeal: ^0.0.5
       rollup: 2.61.0
       rollup-plugin-dts: 4.0.1
       typescript: ^4.5.3
       worktop: ^0.8.0-next.10
     dependencies:
       flru: 1.0.2
-      piecemeal: 0.0.4
+      piecemeal: 0.0.5
       worktop: 0.8.0-next.10
     devDependencies:
       '@cloudflare/workers-types': 3.2.0
@@ -326,8 +326,8 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
-  /piecemeal/0.0.4:
-    resolution: {integrity: sha512-UFQJB7S9dcGxauILZPBYFn16wMStRyLhQnPoH5sRwEsw9mvby7j3MLVmgl7/9m0eE9ibLtXPXB9aqR2Phgk5FA==}
+  /piecemeal/0.0.5:
+    resolution: {integrity: sha512-tJPINw6eZEgG9msiwkWHjptsNm444RHiq/xcltcXxlq5N4HRBCNOuv5qarjI1U2QMhabqITZLaJruLuRVdoFrA==}
     dev: false
 
   /regexparam/2.0.0:
