@@ -18,14 +18,14 @@
 	},
 	"main": "./index.js",
 	"module": "./index.mjs",
-	"types": "index.d.ts",
+	"types": "./index.d.ts",
 	"files": [
 		"index.mjs",
 		"index.js",
 		"index.d.ts"
 	],
 	"scripts": {
-		"build": "rollup -c",
+		"build": "bundt",
 		"typecheck": "tsc --noEmit --skipLibCheck"
 	},
 	"dependencies": {
@@ -34,18 +34,16 @@
 		"worktop": "^0.8.0-next.10"
 	},
 	"devDependencies": {
-		"@cloudflare/workers-types": "3.2.0",
-		"@marais/tsconfig": "0.0.1",
-		"@types/node": "16.11.11",
+		"@cloudflare/workers-types": "3.4.0",
+		"@marais/tsconfig": "0.0.2",
+		"@types/node": "17.0.21",
+		"bundt": "2.0.0-next.0",
 		"graphql": "16.1.0-experimental-stream-defer.6",
-		"rollup": "2.61.0",
-		"rollup-plugin-dts": "4.0.1",
-		"typescript": "^4.5.3"
+		"typescript": "4.6.2"
 	},
 	"peerDependencies": {
 		"graphql": "*"
 	},
-	"packageManager": "pnpm@6.23.6",
 	"volta": {
 		"node": "17.2.0"
 	}

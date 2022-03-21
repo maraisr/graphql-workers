@@ -5,65 +5,57 @@ import {
 	type GraphQLSchema,
 	parse,
 	validate,
-	type ValidationRule,
 } from "graphql";
 import { stream } from "piecemeal/worker";
 import { reply } from "worktop/response";
 
-export interface Options {
-	context?: unknown;
-	validationRules?: ValidationRule[];
-	queryParseCache?: Map<string, DocumentNode> | false;
-	executor?: typeof execute;
-}
+import type { Options, SchemaResponder } from 'graphql-workers';
 
 let queryCache = flru<DocumentNode>(10);
 
-export const createSchemaResponder = (ctx: ExecutionContext, schema: GraphQLSchema, options?: Options) => {
-	options = options || {};
-
+export const createSchemaResponder = (ctx: ExecutionContext, schema: GraphQLSchema, options: Options = {}): SchemaResponder => {
 	let cache = (options.queryParseCache ?? queryCache);
 
-	async function replyFn(query: DocumentNode | string, variables?: Record<string, any> | null, operationName?: string) {
-		let query_ast: DocumentNode,
+	return {
+		async reply(query, variables, operationName) {
+			let query_ast: DocumentNode,
 			query_string = typeof query === "string";
 
-		if (query_string) {
-			if (cache && cache.has(query as string)) {
-				query_ast = cache.get(query as string);
+			if (query_string) {
+				if (cache && cache.has(query as string)) {
+					query_ast = cache.get(query as string)!;
+				} else {
+					query_ast = parse(query as string);
+				}
 			} else {
-				query_ast = parse(query as string);
+				query_ast = query as DocumentNode;
 			}
-		} else {
-			query_ast = query as DocumentNode;
+
+			const validation_errors = validate(schema, query_ast, options.validationRules, {
+				maxErrors: 1,
+			});
+			if (validation_errors.length) return reply(406, { errors: validation_errors });
+			if (query_string && cache) cache.set(query as string, query_ast);
+
+			const result = await (options.executor || execute)({
+				operationName,
+				schema,
+				document: query_ast,
+				contextValue: options.context,
+				variableValues: variables,
+			});
+
+			if (isAsyncGenerator(result)) {
+				const { response, pipe } = stream(result);
+				ctx.waitUntil(pipe());
+				return response;
+			}
+
+			return reply(200, result, {
+				"content-type": "application/graphql+json",
+			});
 		}
-
-		const validation_errors = validate(schema, query_ast, options.validationRules, {
-			maxErrors: 1,
-		});
-		if (validation_errors.length) return reply(406, { errors: validation_errors });
-		if (query_string && cache) cache.set(query as string, query_ast);
-
-		const result = await (options.executor || execute)({
-			operationName,
-			schema,
-			document: query_ast,
-			contextValue: options.context,
-			variableValues: variables,
-		});
-
-		if (isAsyncGenerator(result)) {
-			const { response, pipe } = stream(result);
-			ctx.waitUntil(pipe());
-			return response;
-		}
-
-		return reply(200, result, {
-			"content-type": "application/graphql+json",
-		});
-	}
-
-	return { reply: replyFn };
+	};
 };
 
 export const makeHandler = (schema: GraphQLSchema, options?: Options): ExportedHandler => ({
