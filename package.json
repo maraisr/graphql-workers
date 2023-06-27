@@ -26,7 +26,7 @@
 	],
 	"scripts": {
 		"build": "bundt --minify",
-		"typecheck": "tsc --noEmit --skipLibCheck"
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"flru": "^1.0.2",
