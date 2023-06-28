@@ -1,13 +1,12 @@
 {
 	"extends": "@marais/tsconfig",
 	"compilerOptions": {
-		"target": "esnext",
+		"baseUrl": ".",
 		"types": ["@cloudflare/workers-types"],
-		"lib": ["esnext", "dom.iterable", "webworker"],
 		"paths": {
-			"graphql-workers": ["./src/index.d.ts"]
+			"graphql-workers": ["src/index.d.ts"]
 		}
 	},
-	"include": ["src"],
+	"include": ["src", "test"],
 	"exclude": ["node_modules"]
 }
